@@ -29,15 +29,16 @@ from twistedwrapper import wrapper
 from pluginloader import pluginloader
 from muc import muc
 import config
-import datetime
+import time
 import os
 import sys
-import hashlib
-import base64
+import lang
 import log
 import traceback
 from cerberus import censor
 from twisted.words.protocols.jabber.jid import JID
+
+__id__ = "$Id: freq.py 331 2008-05-11 17:17:39Z burdakov $"
 
 class freqbot:
 
@@ -64,17 +65,14 @@ class freqbot:
   self.access_modificators = []
   self.cmd_cache = {}
   self.want_restart = False
-  featlist = ['http://jabber.org/protocol/caps', 'http://jabber.org/protocol/muc', 'http://jabber.org/protocol/disco#info', 'urn:xmpp:ping', 'urn:xmpp:time', 'jabber:iq:version', 'vcard-temp']
-  self.features = sorted(featlist)
-  self.version_name = u'FreQ-bot'
+  self.version_name = u'freqbot'
   self.version_version = self.getVer()
   self.log.version = self.version_version
-  self.caps = self.genCaps()
   if config.SHARE_OS: 
    self.version_os = u'Twisted %s, Python %s' % (twisted.__version__, sys.version)
   else: self.version_os = 'SomeOS'
   self.authd = 0
-  self.wrapper = wrapper(self.version_version, self.caps)
+  self.wrapper = wrapper(self.version_version)
   self.wrapper.onauthd = self.onauthd
   self.wrapper.c.addBootstrap('//event/client/basicauth/authfailed', self.failed)
   self.wrapper.c.addBootstrap('//event/client/basicauth/invaliduser', self.failed)
@@ -106,6 +104,7 @@ class freqbot:
   self.log.log('Joined %s groupchats' % len(groupchats, ))
 
  def keep_alive(self):
+  #self.wrapper.presence()
   ping = domish.Element(('jabber:client', 'iq'))
   ping['to'] = config.SERVER
   ping['id'] = 'keep-alive'
@@ -114,6 +113,13 @@ class freqbot:
   if self.authd > 0:
    self.log.log_e(u'keep-alive: ' + ping.toXml(), 1)
    self.wrapper.send(ping)
+  # <iq
+  # type='get'
+  # from='romeo@montague.net/orchard'
+  # to='juliet@capulet.com/balcony'
+  # id='version_1'>
+  # <query xmlns='jabber:iq:version'/>
+  # </iq>
 
  def check_for_ddos(self, jid):
   q = self.cmd_cache.get(jid, 0)
@@ -191,8 +197,6 @@ class freqbot:
  def call_cmd_handlers(self, t, s, body, subject, stanza):
   if t == 'error': return
   if subject: return
-  delayed = [i for i in stanza.children if (i.__class__==domish.Element) and ((i.name=='delay') or ((i.name=='x') and (i.uri=='jabber:x:delay')))]
-  if delayed: return
   #found or create item
   groupchat = s.split('/')[0]
   nick = s[len(groupchat)+1:]
@@ -200,7 +204,6 @@ class freqbot:
   except:
    item = new_item(self)
    item.jid = s
-   item.fulljid = s
    item.realjid = JID(s).userhost()
   if item.room and (item.nick == self.muc.get_nick(item.room.jid)):
    self.log.log(u'own message from %s ignored' % (escape(item.jid), ), 2)
@@ -259,16 +262,10 @@ class freqbot:
     self.log.log('ignored subject from %s, stanza was %s' % (escape(s), escape(stanza.toXml())), 3)
    else:
     self.log.log('got subject from %s, stanza was %s, let\'s call topichandlers' % (escape(s), escape(stanza.toXml())), 1)
-    if j.resource:
-     for i in self.topichandlers: self.call(i, s, subject)
-    else:
-     for i in self.topichandlers: self.call(i, s, b)
+    for i in self.topichandlers: self.call(i, s, subject)
   else:
-   delayed = [i for i in stanza.children if (i.__class__==domish.Element) and ((i.name=='delay') or ((i.name=='x') and (i.uri=='jabber:x:delay')))]
-   if delayed: dl = True
-   else: dl = False
    for i in self.msghandlers:
-    if (t == 'groupchat') or not i[1]: self.call(i[0], s, b, dl)
+    if (t == 'groupchat') or not i[1]: self.call(i[0], s, b)
 
  def call_bad_handlers(self, s, text, badword):
   for i in self.badhandlers: self.call(i, s, text, badword)
@@ -312,40 +309,6 @@ class freqbot:
     query.addElement('version').addContent(self.version_version)
     query.addElement('os').addContent(self.version_os)
     self.wrapper.send(answer)
-  elif (xmlns == 'urn:xmpp:ping') and (typ == 'get'):
-    answer = domish.Element(('jabber:client', 'iq'))
-    answer['type'] = 'result'
-    answer['id'] = x.getAttribute('id')
-    answer['to'] = x.getAttribute('from')
-    self.wrapper.send(answer)
-  elif (xmlns == 'urn:xmpp:time') and (typ == 'get'):
-    answer = domish.Element(('jabber:client', 'iq'))
-    answer['type'] = 'result'
-    answer['id'] = x.getAttribute('id')
-    answer['to'] = x.getAttribute('from')
-    query = answer.addElement('time', 'urn:xmpp:time')
-    t = datetime.datetime.utcnow()
-    tzo = t.strftime('%z')
-    if not tzo: tzo = '+0000'
-    query.addElement('tzo').addContent(tzo[:3]+':'+tzo[3:])
-    query.addElement('utc').addContent(t.strftime('%Y-%m-%dT%H:%M:%S.%fZ'))
-    self.wrapper.send(answer)
-  elif (xmlns == 'http://jabber.org/protocol/disco#info') and (typ == 'get'):
-    answer = domish.Element(('jabber:client', 'iq'))
-    answer['type'] = 'result'
-    answer['id'] = x.getAttribute('id')
-    answer['to'] = x.getAttribute('from')
-    query = answer.addElement('query', 'http://jabber.org/protocol/disco#info')
-    identElem = domish.Element(('', 'identity'))
-    identElem['category'] = 'client'
-    identElem['type']     = 'bot'
-    identElem['name']     = self.version_name
-    query.addChild(identElem)
-    for i in self.features:
-      featElem = domish.Element(('', 'feature'))
-      featElem['var'] = i
-      query.addChild(featElem)
-    self.wrapper.send(answer)
   elif (xmlns == 'jabber:iq:roster') and (typ == 'set'): pass
   elif typ == 'error': pass
   else:
@@ -360,14 +323,6 @@ class freqbot:
     cond = error.addElement('feature-not-implemented')
     cond['xmlns']='urn:ietf:params:xml:ns:xmpp-stanzas'
     self.wrapper.send(answer)
-
- def genCaps(self):
-  identity = 'client/bot//%s %s<'%(self.version_name, self.version_version)
-  collector = ''
-  collector += identity
-  collector += '<'.join(self.features) + '<'
-  binary = hashlib.sha1(collector.encode('utf-8')).digest()
-  return base64.b64encode(binary).decode('utf-8')
 
  def getVer(self):
   try:

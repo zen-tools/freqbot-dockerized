@@ -18,9 +18,6 @@
 #~ You should have received a copy of the GNU General Public License    #
 #~ along with FreQ-bot.  If not, see <http://www.gnu.org/licenses/>.    #
 #~#######################################################################
-
-import random
-
 def commands_handler(q):
  typ, source, text, stanza = q
  cm = '.commands '
@@ -28,14 +25,6 @@ def commands_handler(q):
   text = text[len(cm):]
   cmds = text.split(u';')
   return [(typ, source, cmd, stanza) for cmd in cmds if cmd]
-
-def random_command_handler(q):
- typ, source, text, stanza = q
- cm = '.random_command '
- if text.startswith(cm):
-  text = text[len(cm):]
-  cmds = text.split(u';')
-  return random.choice([(typ, source, cmd, stanza) for cmd in cmds if cmd])
 
 #class my_wrapper:
  #def __init__(self, item, typ):
@@ -94,7 +83,6 @@ def mynick_handler(q):
   return [(typ, source, text, stanza)]
 
 bot.register_rewrite_engine(commands_handler)
-bot.register_rewrite_engine(random_command_handler)
 bot.register_rewrite_engine(null_handler)
 bot.register_rewrite_engine(private_handler)
 bot.register_rewrite_engine(mynick_handler)

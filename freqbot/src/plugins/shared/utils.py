@@ -135,7 +135,8 @@ accepted_ranges = [
 (u'\uD0000', u'\uDFFFD'),
 (u'\uE0000', u'\uEFFFD'),
 (u'\uF0000', u'\uFFFFD'),
-(u'\u100000', u'\u10FFFD')
+(u'\u100000', u'\u10FFFD'),
+(u'\U0001F300', u'\U0001F5FF')
 ]
 
 def clear_char(c):

@@ -1,0 +1,2 @@
+'.lang_set_msg lang key=value'
+

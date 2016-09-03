@@ -1,0 +1,9 @@
+muc
+добавить конференцию в чёрный список, то есть туда нельзя будет позвать бота
+командой .join
+
+Синтаксис: .blacklist_add [/N(d|h|m|s)] room@server [причина]
+
+примеры:
+ ".blacklist_add room@conference.muhosransk.ru нефиг"
+ ".blacklist_add /5h chat@conference.chat.ru" - запретить боту заходить в эту конфу на 5 часов

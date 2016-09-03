@@ -1,0 +1,12 @@
+basic
+команда-"эхо", принимает параметры, и отвечает ими же. Используется в целях отладки. Синтаксис: '.echo foo'
+
+Возможна вставка "контекстных переменных": например .echo %NICK% - вернёт ваш ник
+пример:
+  ".echo мы находимся в конфе %ROOM%, я %BOT%, ты %NICK%, %AFFILIATION%/%ROLE%"
+
+доступные контексты:
+%NICK%, %QNICK%, %JID%, %ROLE%, %AFFILIATION%, %ACCESS%
+%ROOM%, %SUBJECT%, %ITEMS%, %BOT%
+%DAY%, %MONTH%, %YEAR%, %HOURS%, %MINUTES%, %SECONDS%
+%VERSION%, %SYSTEM%

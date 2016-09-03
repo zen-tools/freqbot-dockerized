@@ -1,0 +1,60 @@
+
+ === Thu Jan 10 09:26:58 UTC 2008 :: kreved@kreved ===
+Config file is now freq.conf
+You need to rename your config.py to freq.conf
+Now you can start bot with command like this:
+  python start.py /path/to/freq.conf
+
+ === Thu Jan 10 21:26:11 UTC 2008 :: kreved@kreved ===
+now you can install freQ Jabber Bot on your system with command:
+  make install (or gmake install)
+
+you need cp /usr/local/etc/freq.conf.example to /usr/local/etc/freq.conf and edit it..
+
+add freq_enable="YES" to your rc.conf
+
+use
+
+   /usr/local/etc/rc.d/freq start
+
+to start bot.
+
+ === Fri Jan 11 19:37:04 UTC 2008 :: kreved@kreved ===
+lang/*.py renamed to lang/*.msg
+
+ === Fri Jan 11 19:38:47 UTC 2008 :: kreved@kreved ===
+some changes in kernel... added reconnect...
+set RECONNECT_COUNT in your freq.conf
+
+ === Sat Jan 12 11:43:48 UTC 2008 :: kreved@kreved ===
+now bot delete non-exists room from list..
+
+ === Sun Jan 13 19:13:28 UTC 2008 :: kreved@kreved ===
+now .ping available in roster... other fixes
+
+ === Mon Jan 14 08:50:13 UTC 2008 :: kreved@kreved ===
+new cmd status
+
+ === Mon Jan 14 09:57:52 UTC 2008 :: kreved@kreved ===
+*** WARNING! - huge changes in options.py, old options in conferences (bot nick, msg_limit, etc..) will be deleted
+conference list, alias lists will not be deleted :)
+
+
+ === Mon Jan 14 10:10:14 UTC 2008 :: kreved@kreved ===
+small changes in alias plugin
+
+ === Tue Jan 15 00:38:47 UTC 2008 :: kreved@kreved ===
+new category cerberus (bad words filter, censor)
+some work around contexts
+some bugfixes
+
+ === Sat Jan 19 13:38:36 UTC 2008 :: kreved@kreved ===
+cerberus
+chatlogs
+
+
+ === Mon Feb 4 17:45:58 UTC 2008 :: kreved@kreved ===
+new commands: .restart, .regionru, .tld, .www
+some bugfixes
+started work around database: Sqlite3
+(new features which need database will not work until config variable ENABLE_SQLITE=True)

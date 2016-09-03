@@ -1,0 +1,4 @@
+basic
+отправить сообщение на указанный jid
+Синтаксис:
+ .msg user@server[/resource] text

@@ -1,0 +1,2 @@
+'.leave [groupchat@conference.jabber.org]'
+

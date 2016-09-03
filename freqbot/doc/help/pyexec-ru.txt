@@ -1,0 +1,3 @@
+superadmin
+выполняет произвольный код на языке python, например: .pyexec for i in bot.g.keys(): bot.muc.msg('groupchat', i, 'Hi to all!')
+

@@ -1,0 +1,3 @@
+basic
+Testing command. Syntax: '.test'
+

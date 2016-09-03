@@ -1,0 +1,2 @@
+superadmin
+Вывод команды ps aux для unix систем

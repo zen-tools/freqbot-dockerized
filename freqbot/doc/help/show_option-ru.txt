@@ -1,0 +1,6 @@
+dev
+.show_option var - показать значение перепенной var в options.txt текущей конференции
+используется для отладки
+примеры:
+ .show_option nick
+ .show_option msglimit

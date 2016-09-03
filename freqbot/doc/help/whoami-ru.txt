@@ -1,0 +1,13 @@
+muc
+показывает информацию о вас. Команда доступна только в конференции.
+
+уровни доступа:
+ owner/moderator: 11
+ admin/moderator: 9
+ member/moderator: 7
+ member/participant: 4
+ member/visitor: 3
+ none/moderator: 5
+ none/participant: 2
+ none/visitor: 1
+

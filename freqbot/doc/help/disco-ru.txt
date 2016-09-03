@@ -1,0 +1,8 @@
+query
+Service Discovery (обзор сервисов)
+Синтаксис: .disco jid [find], например:
+ .disco jabbus.org - обзор сервисов Jabbus;
+если указать необязательный второй аргумент, то можно задать строку для поиска, например:
+ '.disco conference.jabber.ru bombus' - найдет все конференции на conference.jabber.ru, в описании которых есть слово bombus
+ '.disco conference.jabber.ru botzone@' - покажет на каком месте находится конфа botzone@
+

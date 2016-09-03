@@ -1,0 +1,5 @@
+dev
+посмотреть, какому jid-у какой ник соответствует в базе бота
+синтаксис:
+ .nickstorage_get jid
+ .nickstorage_set nick

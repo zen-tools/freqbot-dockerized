@@ -1,0 +1,6 @@
+options
+установка пароля на просмотр чатлогов текущей конференции.
+Пароль ставится через .htaccess/.htpasswd, поэтому будет работать, только если на сервере стоит apache и htpasswd.
+Синтаксис:
+ 1) .chatlogs_passwd some_user some_passwd
+ 2) .chatlogs_passwd clear

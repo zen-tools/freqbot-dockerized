@@ -1,0 +1,5 @@
+muc
+по этой команде бот заходит в конференцию
+1) .join foo@conference.jabber.org - заходит в foo@
+2) .join foo@conference.jabber.org bar - заходит в foo@ с ником bar
+

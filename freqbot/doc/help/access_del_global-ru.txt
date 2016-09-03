@@ -1,0 +1,2 @@
+superadmin
+.access_del_global jid - удалить jid из глобального списка доступа

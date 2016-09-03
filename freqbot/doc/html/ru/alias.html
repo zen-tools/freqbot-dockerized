@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>alias</title>
+<style type="text/css"> <!-- .ts {color: #0A0A0A; text-decoration: none;} .up {color: #009900; font-size: 18px; } .down {color: #990000; font-size: 18px; } //--> </style>
+</head>
+<body>
+<a href='index.html'>[Назад]</a>
+<hr/>
+<p>
+<b>alias_add</b><pre class='ts'>добавить алиас.
+Синтаксис: .alias_add [access:M:N@]foo[&amp;]=bar
+
+Примечание: в bar можно писать сочетания %1, %2, %3... %*, вместо них будут подставлены первый, второй, третий.. или все параметры,  соответственно. Например: .alias_add !v=.version %* - тут всё параметры, которые получает алиас !v передаются команде .version (к примеру &quot;!v вася&quot; преобразуется в &quot;.version вася&quot;)
+
+Также можно подставлять параметры %Q1, %Q2, %Q2... %Q*
+они аналогичны %1, %2... %*, но экранируют символы &lt;\&gt;, &lt;&quot;&gt; и &lt;`&gt;,
+то есть к примеру можно безопасно  использовать алиас типа
+.alias_add access:0:100@!netping=.sh ping -c 4 &quot;%Q*&quot;
+
+Дополнительные фичи:
+ 1) если перед знаком равенства написать &amp;, то при вызове алиаса не нужно будет писать пробел
+    например: &quot;.alias_add ~&amp;=.google %*&quot;, тогда вызов например &quot;~jabber&quot; будет преобразован в &quot;.google jabber&quot;
+ 2) можно установить уровень доступа на алиас, и права, с которыми он будет выполняться.
+    синтаксис &quot;.alias_add access:доступ:права@алиас=команда&quot;, например если вы хотите разрешить мемберам
+    вашей конфы кикать других с помощью бота, напишите '.alias_add access:4:5@kick=.kick %*'
+     здесь 4 - это уровень доступа к алиасу (мембер), 5 - доступ, с которым будет выполнена
+     команда .kick (для неё необходимы права &quot;5&quot;)
+    другой пример: &quot;.alias_add access:0:100@df=.sh df -h&quot; - разрешить всем смотреть, сколько у вас места на диске
+    ВНИМАНИЕ:
+      не делайте алиасы типа &quot;.alias_add access:0:100@!svn=.sh svn info %*&quot;, потому что злоумышленник может
+      в таком случае написать к примеру &quot;!svn someurl; rm -rf ~/*&quot;
+      если всё же нужно сделать подобный алиас, то можно сделать что-то типа
+       .alias_add access:0:100@!svn=.sh svn info &quot;%Q*&quot;
+       %Q* сэкранирует все попытки выйти за пределы кавычек, которые могут оказаться в %*
+ 3) в команде можно подставлять контекстные переменные... типа &quot;.alias_add access:0:5@харакири=.kick %NICK%|пиф паф&quot;
+
+P.S. - уровни доступа можно посмотреть в хелпе по команде .whoami
+</pre>
+</p><p>
+<b>alias_clear</b><pre class='ts'>.alias_clear - удаляет ВСЕ алиасы текущей конференции.
+
+</pre>
+</p><p>
+<b>alias_del</b><pre class='ts'>.alias_del foo - удаляет алиас с именем foo
+
+</pre>
+</p><p>
+<b>alias_show</b><pre class='ts'>показывает список алиасов текущей конференции, или один алиас
+ 1) .alias_show - показать все алиасы
+ 2) .alias_show foo - показать алиас foo (если таковой существует, конечно)
+
+</pre>
+</p>
+</body>
+</html>

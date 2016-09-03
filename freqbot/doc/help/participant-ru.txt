@@ -1,0 +1,3 @@
+muc admin
+.participant ник
+

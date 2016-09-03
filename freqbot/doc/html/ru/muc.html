@@ -1,0 +1,299 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>muc</title>
+<style type="text/css"> <!-- .ts {color: #0A0A0A; text-decoration: none;} .up {color: #009900; font-size: 18px; } .down {color: #990000; font-size: 18px; } //--> </style>
+</head>
+<body>
+<a href='index.html'>[Назад]</a>
+<hr/>
+<p>
+<b>aban</b><pre class='ts'>автобан - бот автоматически банит.
+синтаксис полностью аналогичен .akick (см.)
+</pre>
+</p><p>
+<b>admin</b><pre class='ts'> .admin nick
+ .admin jid
+
+</pre>
+</p><p>
+<b>akick</b><pre class='ts'>автокик
+Принцип работы:
+ Бот может автоматически кикать пользователей по нику или по jid
+
+Формальный синтаксис:
+
+  .akick [/N(d|h|m|s)] jid [exp] jid [||причина]
+  .akick [/N(d|h|m|s)] nick [exp] ник [||причина]
+  .akick [/N(d|h|m|s)] ник [||причина]
+  .akick show
+  .akick del N
+  .akick clear
+
+Добавление в список:
+
+ &quot;.akick jid vasya@muhosransk.ru&quot; - бот будет автоматически кикать пользователя
+ с jid-ом  vasya@muhosransk.ru
+
+ &quot;.akick nick Шестёрка&quot; - бот будет автоматически кикать любого, кто зайдёт в
+ конференцию с ником Шестёрка
+
+ &quot;.akick jid exp .*@muhosransk\.ru&quot; - бот будет кикать всех пользователей
+ сервера muhosransk.ru (здесь опция exp - означает, что .*@muhosransk\.ru - это
+ регулярное выражение)
+
+ &quot;.akick nick exp .*\/.*&quot; - кикать тех, у кого ник содержит &quot;/&quot;
+
+ Если надо добавить в список пользователя, который сейчас сидит в конференции,
+ то синтаксис упрощается:
+ &quot;.akick Вася&quot; - бот определит jid Васи, и добавит его в список для автокика
+ (&quot;.akick jid vasya@muhosransk.ru&quot; дало бы такой же результат)
+
+ Ограничение по времени: обычный автокик действует, пока ник или jid не
+ удалят из списка, но можно указать срок действия автокика, по истечении 
+ которого соответствующий элемент удаляется из списка.
+
+ &quot;.akick /5h Вася&quot; - кикать Васю в течение пяти часов
+ &quot;.akick /20d Ваня&quot; - кикать Васю в течение 20 дней
+
+Просмотр списка:
+ &quot;.akick show&quot; - показать список
+
+Удаление:
+ &quot;.akick del N&quot; - удалить из списка элемент #N,
+ например &quot;.akick del 5&quot;
+
+Очистка списка:
+ &quot;.akick clear&quot; - очистить список
+
+Указание причины:
+ после || можно указать причину кика, например:
+ &quot;.akick Вася||и больше здесь не появляйся!&quot;</pre>
+</p><p>
+<b>amoderator</b><pre class='ts'>автомодератор - бот автоматически даёт права модератора
+синтаксис полностью аналогичен .akick (см.)
+</pre>
+</p><p>
+<b>aparticipant</b><pre class='ts'>бот автоматически присваивает участника (participant)
+синтаксис полностью аналогичен .akick (см.)
+</pre>
+</p><p>
+<b>avisitor</b><pre class='ts'>автовизитор - бот автоматически лишает голоса...
+синтаксис полностью аналогичен .akick (см.)
+</pre>
+</p><p>
+<b>ban</b><pre class='ts'>.ban ник, при желании можно указать причину кика - .ban ник|причина; вместо ника можно написать jid
+
+</pre>
+</p><p>
+<b>blacklist_add</b><pre class='ts'>добавить конференцию в чёрный список, то есть туда нельзя будет позвать бота
+командой .join
+
+Синтаксис: .blacklist_add [/N(d|h|m|s)] room@server [причина]
+
+примеры:
+ &quot;.blacklist_add room@conference.muhosransk.ru нефиг&quot;
+ &quot;.blacklist_add /5h chat@conference.chat.ru&quot; - запретить боту заходить в эту конфу на 5 часов
+</pre>
+</p><p>
+<b>blacklist_clear</b><pre class='ts'>очистить blacklist
+</pre>
+</p><p>
+<b>blacklist_del</b><pre class='ts'>удалить конференцию из blacklist
+пример: .blacklist_del botzone@conference.jabber.ru
+</pre>
+</p><p>
+<b>blacklist_show</b><pre class='ts'>показать blacklist
+</pre>
+</p><p>
+<b>clean</b><pre class='ts'>очистка истории конференции, синтаксис: .clean
+
+</pre>
+</p><p>
+<b>disable_noisy</b><pre class='ts'>выключить &quot;шумный&quot; режим
+</pre>
+</p><p>
+<b>enable_noisy</b><pre class='ts'>Включить &quot;шумный&quot; режим: бот будет приветствовать всех входящих и
+прощаться с выходящими из конференции. [используется для отладки]
+</pre>
+</p><p>
+<b>get_msglimit</b><pre class='ts'>максимальная длина сообщений, которые бот будет посылать в общий чат, см. также set_msglimit Использование: .get_msglimit
+
+</pre>
+</p><p>
+<b>groupchats</b><pre class='ts'>список конференций, где сидит бот
+Cинтаксис: .groupchats
+
+</pre>
+</p><p>
+<b>join</b><pre class='ts'>по этой команде бот заходит в конференцию
+1) .join foo@conference.jabber.org - заходит в foo@
+2) .join foo@conference.jabber.org bar - заходит в foo@ с ником bar
+
+</pre>
+</p><p>
+<b>kick</b><pre class='ts'>.kick ник, при желании можно указать причину кика - .kick ник|причина
+
+</pre>
+</p><p>
+<b>leave</b><pre class='ts'>команда выхода из конференции
+1) .leave - выйти из текущей конференции (доступно админам конференции)
+2) .leave foo@conference.jabber.org - выйти из foo@ (доступно админам бота)
+3) .leave bar@conference.muhosransk.ru фиг - выйти из bar@ с статусным
+   сообщением &quot;фиг&quot; (доступно админам бота)
+
+</pre>
+</p><p>
+<b>member</b><pre class='ts'> .member nick
+ .member jid
+
+</pre>
+</p><p>
+<b>moderator</b><pre class='ts'>.moderator ник
+
+</pre>
+</p><p>
+<b>msg_blacklist</b><pre class='ts'>Чёрный список конференций для команды .tell
+если конференция находится в этом списке, то из
+неё вам не смогут отправлять сообщения командой .tell
+Синтаксис:
+ 1) .msg_blacklist clear - очистить
+ 2) .msg_blacklist show - показать список
+ 3) .msg_blacklist del room@conference.server - удалить
+     конференцию из списка
+ 4) .msg_blacklist room@conference.server - добавить
+</pre>
+</p><p>
+<b>msg_whitelist</b><pre class='ts'>Белый список для команды .tell
+Если конференция есть в этом списке - то сообщения,
+отправленные из неё командой .tell будут приходит без
+каких-либо вопросов
+Синтаксис - аналогично .msg_blacklist
+</pre>
+</p><p>
+<b>none</b><pre class='ts'>удалить пользователя из всех списков (бан, мемберы, админы, владельцы)
+
+</pre>
+</p><p>
+<b>owner</b><pre class='ts'> .owner nick
+ .owner jid
+
+</pre>
+</p><p>
+<b>participant</b><pre class='ts'>.participant ник
+
+</pre>
+</p><p>
+<b>passive</b><pre class='ts'>показывает конфу, где меньше всего посетителей. Эта функция для отладки, на ней тоже особо не заморачивайтесь :)
+синтаксис: .passive
+
+</pre>
+</p><p>
+<b>realjid</b><pre class='ts'>показывает jid участника конференции.
+Синтаксис: .realjid Вася
+
+</pre>
+</p><p>
+<b>rejoin</b><pre class='ts'>перезайти в конфы
+
+</pre>
+</p><p>
+<b>say</b><pre class='ts'>Написать сообщение в конфу
+пример:
+ .say привет всем
+</pre>
+</p><p>
+<b>seen</b><pre class='ts'>.seen - посмотреть, когда последний раз человек был в конфе
+
+Синтаксис: .seen {jid|nick}
+
+напимер:
+ .seen Вася
+ .seen vasily@jabber.ru
+</pre>
+</p><p>
+<b>set_greeting</b><pre class='ts'>.set_greeting [приветствие]
+установить приветствие, которое бот будет писать в приват каждому
+с уровнем доступа меньше 3 при входе в конфу.
+запуск команды без параметра - удаляет приветствие
+пример:
+ .set_greeting приветствую тебя, о %NICK%, в нашей комнате(%ROOM%) надо соблюдать
+ такие правила: бла, бла, бла...</pre>
+</p><p>
+<b>set_msglimit</b><pre class='ts'>установить максимальную длину сообщений, которые бот будет посылать в общий чат.
+Более длинные сообщения будут идти в приват.
+Пример использования: .set_msglimit 300
+</pre>
+</p><p>
+<b>set_nick</b><pre class='ts'>меняет ник бота в текущей конференции. Синтаксис: .set_nick foo
+
+</pre>
+</p><p>
+<b>set_status</b><pre class='ts'>меняет статусное сообщение бота в текущей конференции. Синтаксис: .set_status foo
+
+</pre>
+</p><p>
+<b>set_subject</b><pre class='ts'>установить тему конференции
+например: &quot;.set_subject новая тема&quot;
+</pre>
+</p><p>
+<b>status</b><pre class='ts'>по этой команде можно посмотреть статус участника конференции
+синтаксис: .status [nick]
+примеры:
+ .status ????
+ .status
+</pre>
+</p><p>
+<b>tell</b><pre class='ts'>оставить сообщение участнику комнаты, который сейчас оффлайн,
+чтоб он получил это сообщение как только бот где-то увидит
+его онлайн (возможно и в других комнатах, поиск ведётся по jid)
+
+Синтаксис: &quot;.tell ник_получателя: текст сообщения&quot;
+
+чтоб сообщение было доставлено, надо, чтоб бот хотя бы раз видел
+получателя в текущей комнате (чтоб знать его jid)
+
+см. также .msg_blacklist/.msg_whitelist
+</pre>
+</p><p>
+<b>visitor</b><pre class='ts'>.visitor ник - лишить голоса
+
+</pre>
+</p><p>
+<b>whoami</b><pre class='ts'>показывает информацию о вас. Команда доступна только в конференции.
+
+уровни доступа:
+ owner/moderator: 11
+ admin/moderator: 9
+ member/moderator: 7
+ member/participant: 4
+ member/visitor: 3
+ none/moderator: 5
+ none/participant: 2
+ none/visitor: 1
+
+</pre>
+</p><p>
+<b>whois</b><pre class='ts'>показывает информацию о участнике конференции
+'.whois foo' - покажет информацию о участнике с ником foo из текущей конференции
+
+</pre>
+</p><p>
+<b>wtf</b><pre class='ts'>вывод определения из локальной базы данных
+синтаксис: .wtf ключ
+пример: .wtf linux
+для отправления в приват используйте .private .wtf ключ или .redirect nick .wtf ключ
+</pre>
+</p><p>
+<b>wtfnames</b><pre class='ts'>показывает список и количество определений в локальной базе данных конференции.
+пример: .wtfnames
+</pre>
+</p><p>
+<b>wtfsearch</b><pre class='ts'>Поиск по ключам и определениям в локальной базе данных.
+пример: .wtfsearch linux
+.wtfsearch unix
+</pre>
+</p>
+</body>
+</html>

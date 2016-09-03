@@ -196,7 +196,4 @@ bot.register_leave_handler(chatlogs_leave_handler)
 # We should have write access to config.CHATLOGS_DIR
 if os.access(config.CHATLOGS_DIR, os.W_OK) == 0:
  os.mkdir(config.CHATLOGS_DIR)
- os.mkdir(config.CHATLOGS_DIR+'/images')
- from shutil import copyfile
- for img in ['powered-by-freq.png', 'powered-by-python.png', 'valid-css.gif', 'valid-xhtml.png']:
-  copyfile('static/'+img, config.CHATLOGS_DIR+'/images/'+img)
+

@@ -8,3 +8,4 @@ $ cd freqbot-dockerized
 ~/freqbot-dockerized $ docker build -t freqbot .
 ~/freqbot-dockerized $ docker run -d -e ACCOUNT="syslog@jabber.ua" -e PASSWD="******" -e NICK="SysLog" -e ADMINS="your-jid@jabber.ua, more-jid@jabber.ua" -v /tmp/data:/data --name jabber-bot freqbot
 ```
+

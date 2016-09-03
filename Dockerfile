@@ -5,7 +5,7 @@ MAINTAINER Dmitriy Poltavchenko <admin@linuxhub.ru>
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update
-RUN apt-get install -y python python-twisted python-simplejson vim locales
+RUN apt-get install -y python python-twisted python-simplejson python-regex vim locales
 
 ENV LANG C.UTF-8
 ENV LANGUAGE C.UTF-8

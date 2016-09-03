@@ -28,6 +28,7 @@ class item:
   self.handled = None
   self.room = room
   self.jid = None
+  self.fulljid = None
   self.realjid = None
   self.nick = None
   self.role = None
@@ -107,6 +108,7 @@ def item_x(i, access):
  #print i
  #print access
  r.jid = i.jid
+ r.fulljid = i.fulljid
  r.realjid = i.realjid
  r.nick = i.nick
  r.role = i.role

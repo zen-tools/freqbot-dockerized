@@ -1,95 +1,161 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
-#~#######################################################################
-#~ Copyright (c) 2008 Burdakov Daniel <kreved@kreved.org>               #
-#~ Copyright (c) 2010 Kazakov Alexandr <ferym@jabber.ru>                #
-#~                                                                      #
-#~ This file is part of FreQ-bot.                                       #
-#~                                                                      #
-#~ FreQ-bot is free software: you can redistribute it and/or modify     #
-#~ it under the terms of the GNU General Public License as published by #
-#~ the Free Software Foundation, either version 3 of the License, or    #
-#~ (at your option) any later version.                                  #
-#~                                                                      #
-#~ FreQ-bot is distributed in the hope that it will be useful,          #
-#~ but WITHOUT ANY WARRANTY; without even the implied warranty of       #
-#~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        #
-#~ GNU General Public License for more details.                         #
-#~                                                                      #
-#~ You should have received a copy of the GNU General Public License    #
-#~ along with FreQ-bot.  If not, see <http://www.gnu.org/licenses/>.    #
-#~#######################################################################
+# __NEED_DB__
+import sys
 
-import sqlite3
-from random import randint
-import string
+class Wtf:
+    def __init__(self, bot):
+        self.db = db.database('wtf')
+        self.bot = bot
+        q = self.db.query('select count(*) from SQLITE_MASTER where type="table" and tbl_name="wtf"')
+        if q.fetchone()[0] == 0:
+            self.bot.log.log('Create table for wtf')
+            self.db.query('create table wtf(room text, wtf_id text, wtf_val text)')
+            self.db.commit()
 
-wtfbase = config.DBDIR+'/wtf.db'
+    def _wtf(self, room, wtf_id, d):
+        c = self.db.query('select wtf_val from wtf where room=? and wtf_id=?',
+            (room, wtf_id.lower()))
+        if c:
+            res = c.fetchone()
+            if res:
+                d.callback(res[0])
+            else:
+                d.callback(0)
+        else: d.callback(0)
+    
+    def _dfn(self, room, wtf_id, wtf_val, d):
+        try:
+            if self.db.query('select count(*) from wtf where room=? and wtf_id=?',
+                (room, wtf_id.lower())).fetchone()[0] == 0:
+                self.db.query('insert into wtf values (?, ?, ?)',
+                    (room, wtf_id.lower(), wtf_val))
+            else:
+                self.db.query('update wtf set wtf_val=? where room=? and wtf_id=?',
+                    (wtf_val, room, wtf_id.lower()))
+            self.db.commit()
+            d.callback(0)
+        except:
+			error = sys.exc_info()[0]
+			d.errback(error)
+        
+    def _wtf_find(self, room, s, d):
+        res = self.db.query('select wtf_id from wtf where room=? and wtf_id like ?',
+                (room, '%%%s%%'%s.lower())).fetchall()
+        if res:
+            d.callback([u'%s'%i[0] for i in res])
+        else:
+            d.callback(0)
+            
+    def _wtf_count(self, room, d):
+        try:
+            d.callback(self.db.query('select count(*) from wtf where room=?',
+                (room,)).fetchone()[0])
+        except:
+            error = sys.exc_info()[0]
+            d.errback(error)
+            
+    def _wtf_words(self, room, d):
+        try:
+            res = self.db.query('select wtf_id from wtf where room=?',
+                (room,)).fetchall()
+            if res:
+                d.callback([u'%s'%i[0] for i in res])
+            else:
+                d.callback(0)
+        except:
+			error = sys.exc_info()[0]
+			d.errback(error)
 
-def dfn_handler(t, s, params):
-  if params:
-   cn = sqlite3.connect(wtfbase)
-   cr = cn.cursor()
-   kv = string.split(params, '=', 1)
-   if not len(kv)<2:
-    key = string.lower(kv[0]).strip()
-    val = kv[1].strip()
-    if not val:
-     try:
-      cr.execute('delete from wtf where room=? and key=?',(s.room.jid,key))
-      cn.commit()
-      cn.close()
-      s.lmsg(t,'dfn_remove')
-     except: s.lmsg(t,'dfn_failed')
+    def wtf(self, room, wtf_id):
+        d = D()
+        reactor.callFromThread(self.bot.call, self._wtf, room, wtf_id, d)
+        return d
+    
+    def dfn(self, room, wtf_id, wtf_val):
+        d = D()
+        reactor.callFromThread(self.bot.call, self._dfn, room, wtf_id,
+            wtf_val, d)
+        return d
+    
+    def wtf_find(self, room, s):
+        d = D()
+        reactor.callFromThread(self.bot.call, self._wtf_find, room, s, d)
+        return d
+        
+    def wtf_count(self, room):
+        d = D()
+        reactor.callFromThread(self.bot.call, self._wtf_count, room, d)
+        return d
+        
+    def wtf_words(self, room):
+        d = D()
+        reactor.callFromThread(self.bot.call, self._wtf_words, room, d)
+        return d
+
+wt = Wtf(bot)
+
+def wtf(t, s, p):
+    p = p.strip()
+    if p:
+        d = wt.wtf(s.room.jid, p)
+        d.addCallback(wtf_result, t, s)
+        d.addErrback(wtf_error, t, s)
     else:
-     cr.execute('delete from wtf where room=? and key=?',(s.room.jid,key))
-     cr.execute('insert into wtf values (?,?,?)',(s.room.jid,key,val+"\n(by %s %s)" % (s.nick,time.strftime("%d.%m.%Y %H:%M:%S"))))
-     cn.commit()
-     cn.close()
-     s.lmsg(t,'dfn_save')
-   else: s.lmsg(t,'dfn_empty')
-  else: s.lmsg(t,'dfn_empty')
+        s.syntax(t, 'wtf')
 
-def wtf_handler(t,s,params):
- if not params: s.lmsg(t,'wtf_empty'); return
- cn = sqlite3.connect(wtfbase)
- cr = cn.cursor()
- try:
-  res = cr.execute('select val from wtf where room=? and key=?',(s.room.jid,params)).fetchone()
-  s.lmsg(t,'wtf_result',params,''.join(res))
-  cn.close()
- except: s.lmsg(t,'wtf_not_found'); cn.close()
- 
-def wtfnames_handler(t,s,params):
- cn = sqlite3.connect(wtfbase)
- cr = cn.cursor()
- keys = cr.execute('select * from wtf where room=?',(s.room.jid,))
- res = []
- try:
-  for i in keys:
-   res.append(i[1])
-  if len(res)==0: s.lmsg(t,'wtfnames_empty'); return
-  s.lmsg(t,'wtfnames_result',', '.join(res),str(len(res)))
-  cn.close()
- except: s.lmsg(t,'failed'); cn.close()
- 
-def wtfsearch_handler(t,s,params):
- if not params: s.lmsg(t,'wtfsearch_not_parameters'); return
- cn = sqlite3.connect(wtfbase)
- cr = cn.cursor()
- params = '%'+params+'%'
- try:
-  res = cr.execute('select * from wtf where (room=?) and (key like ? or val like ?)',(s.room.jid,params,params))
-  out = []
-  for i in res:
-   out.append(i[1])
-  if len(out)<1: s.lmsg(t,'wtfsearch_error'); return
-  s.lmsg(t,'wtfsearch_result',', '.join(out))
-  cn.close()
- except: s.lmsg(t,'wtfsearch_error'); cn.close()
+def wtf_find(t, s, p):
+    p = p.strip()
+    if p:
+        d = wt.wtf_find(s.room.jid, p)
+        d.addCallback(wtf_find_result, t, s)
+        d.addErrback(wtf_error, t, s)
+    else:
+        s.lmsg(t, 'google?')
+
+def wtf_count(t, s, p):
+    d = wt.wtf_count(s.room.jid)
+    d.addCallback(wtf_count_result, t, s)
+    d.addErrback(wtf_error, t, s)
+
+def wtf_words(t, s, p):
+    d = wt.wtf_words(s.room.jid)
+    d.addCallback(wtf_find_result, t, s)
+    d.addErrback(wtf_error, t, s)
+
+def dfn_handler(t, s, p):
+    k, v = p.strip().split('=', 1)
+    if k and v:
+        d = wt.dfn(s.room.jid, k, v)
+        d.addCallback(wtf_set_result, t, s)
+        d.addErrback(wtf_error, t, s)
+    else:
+        s.syntax(t, 'wtfset')
+
+def wtf_result(r, t, s):
+    if r:
+        s.msg(t, r)
+    else:
+        s.lmsg(t, 'not_found')
+
+def wtf_error(err, t, s):
+    s.lmsg(t, 'Error %s'%(err, ))
+
+def wtf_find_result(r, t, s):
+    if r:
+        s.msg(t, show_list(r))
+    else:
+        s.lmsg(t, 'not_found')
+
+def wtf_count_result(r, t, s):
+    s.msg(t, u'%s штук'%r)
+    
+def wtf_set_result(r, t, s):
+    s.lmsg(t, 'ok')
 
 
-bot.register_cmd_handler(dfn_handler, '.dfn', 9)
-bot.register_cmd_handler(wtf_handler, '.wtf')
-bot.register_cmd_handler(wtfnames_handler, '.wtfnames')
-bot.register_cmd_handler(wtfsearch_handler, '.wtfsearch')
+bot.register_cmd_handler(wtf, '.wtf', 0, True)
+bot.register_cmd_handler(wtf_find, '.wtfsearch', 0, True)
+bot.register_cmd_handler(wtf_count, '.wtfcount', 0, True)
+bot.register_cmd_handler(wtf_words, '.wtfall', 0, True)
+bot.register_cmd_handler(dfn_handler, '.dfn', 11, True)

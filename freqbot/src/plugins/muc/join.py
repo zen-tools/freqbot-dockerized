@@ -22,13 +22,18 @@
 def join_handler(t, s, p):
  p = p.strip()
  p = p.replace('\n', '')
- if p.count('/'): s.lmsg(t, 'join_slash')
+ if not p: s.syntax(t, 'join')
  else:
-  if not p: s.syntax(t, 'join')
-  else:
-   if p.count(' '):
-    groupchat = p.split()[0]
-    nick = p[len(groupchat)+1:].strip()
+   if p.count('#'):
+    p_part = p.partition('#')
+    password = p_part[2].strip()
+    p = p_part[0]
+   else:
+    password = None
+   if p.count('/'):
+    p_part = p.partition('/')
+    groupchat = p_part[0]
+    nick = p_part[2].strip()
    else:
     groupchat = p
     nick = config.NICK
@@ -45,7 +50,7 @@ def join_handler(t, s, p):
      m = dump_time(tm, m, True, s)
      s.msg(t, m)
     else:
-     g = bot.muc.join(groupchat, nick)
+     g = bot.muc.join(groupchat, nick, password)
      g.joiner = (s, t)
      bot.log.log_e(u'joining %s (asked by %s)' % (p, s.jid), 5)
 

@@ -35,7 +35,7 @@ def leave_handler(t, s, p):
    else: s.lmsg(t, 'i_am_not_there')
   else: s.lmsg(t, 'not_allowed')
  else:
-  if s.room: bot.muc.leave(s.room.jid, '".leave" command from room admin/owner')
+  if s.room: bot.muc.leave(s.room.jid, '".leave" command from bot owner')
   else: s.lmsg(t, 'muc_only')
 
-bot.register_cmd_handler(leave_handler, '.leave', 8)
+bot.register_cmd_handler(leave_handler, '.leave', 50)

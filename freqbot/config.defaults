@@ -19,6 +19,7 @@ ADMINS = []
 ### MUC ###
 NICK = u'freQ-bot'
 STATUS = u'freQ-bot %VERSION% is online'
+SHOW = u''
 JOIN_ACCESS = 50
 # who has access to '.join' command...
 ROOM_LIMIT = 99
@@ -73,6 +74,3 @@ CHATLOGS_ALLOW_PASSWD = True
 GOOGLE_KEY = '0000000000000000000'
 MSGBOX_SIZE = 10
 MSG_TIME_TO_LIVE = 604800
-
-# automatic addition by Makefile
-RESTART_CMD = '/usr/bin/python /var/freqbot/freqbot/start.py /etc/freqbot.conf'

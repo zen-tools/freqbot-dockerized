@@ -19,7 +19,7 @@
 #~ along with FreQ-bot.  If not, see <http://www.gnu.org/licenses/>.    #
 #~#######################################################################
 
-import re
+import regex
 
 class NickNotFound(Exception):
  def __init__(self, value):
@@ -70,7 +70,7 @@ class aitem:
   if s.lower().startswith('exp '):
    self.regexp = True
    s = s[4:]
-   try: re.match(s, 'test@jabber.org')
+   try: regex.match(s, 'test@jabber.org')
    except: raise MyRegexpError(s)
   else: self.regexp = False
   self.value = s
@@ -89,8 +89,7 @@ class aitem:
   if self.by_jid: s = item.realjid.lower()
   else: s = item.nick
   if self.regexp:
-   return not(self.negative and (item.affiliation <> 'none')) and re.match(self.value, s)
-  #do not apply negative alists to level >= 3
+   return not(self.negative and (item.affiliation <> 'none')) and regex.match(self.value, s)
   else: return (self.value == s)
  def get_reason(self):
   if self.reason: return self.reason
@@ -195,8 +194,8 @@ def a_participant(item, reason):
  item.room.moderate('nick', item.nick, 'role', 'participant', '')
 
 
-AKICK = alist(bot, 'akick', a_kick, True)
-AVISITOR = alist(bot, 'avisitor', a_visitor, True)
+AKICK = alist(bot, 'akick', a_kick, False)
+AVISITOR = alist(bot, 'avisitor', a_visitor, False)
 AMODERATOR = alist(bot, 'amoderator', a_moderator, False)
 ABAN = alist(bot, 'aban',  a_ban, True)
 APARTICIPANT = alist(bot, 'aparticipant', a_participant, False)

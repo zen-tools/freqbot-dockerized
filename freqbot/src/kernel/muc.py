@@ -49,7 +49,6 @@ class muc:
   b = b.strip()
   self.bot.log.log(escape(u'attempt to send message to %s (type "%s", body: %s)' % (s, t, b)), 3)
   if (s in self.bot.g.keys()) or (t <> 'groupchat'):
-   if b == '': b = '[empty message]'
    self.bot.wrapper.msg(t, s, b)
   else:
    s = s.split('/')
@@ -109,8 +108,12 @@ class muc:
      _item = [i for i in _x.children if i.name=='item'][0]
      item.affiliation = _item['affiliation']
      item.role = _item['role']
-     try: item.realjid = _item['jid'].split('/')[0]
-     except: item.realjid = item.jid
+     try:
+      item.realjid = _item['jid'].split('/')[0]
+      item.fulljid = _item['jid']
+     except:
+      item.realjid = item.jid
+      item.fulljid = item.jid
     except:
      self.bot.log.err(u"Got invalid presence from '%s'?\n%s: %s<br/><font color=grey>%s</font>" % (x['from'], escape(repr(sys.exc_info()[0])), escape(repr(sys.exc_info()[1])), escape(x.toXml())))
     if not item.handled:
@@ -122,7 +125,7 @@ class muc:
        self.bot.log.log(u'reporting to %s about successful joining..' % (gj[0].jid, ), 6)
        groupchat.joiner = None
      item.handled = True
-     self.bot.call_join_handlers(item)
+    self.bot.call_join_handlers(item)
     if not(item.nick == self.get_nick(groupchat.jid)): #if item isn't bot...
      self.bot.check_text(item, item.nick)
      self.bot.check_text(item, item.status)
@@ -206,16 +209,25 @@ class muc:
  def set_nick(self, groupchat, nick):
   options.set_option(groupchat, 'nick', nick)
 
- def join(self, groupchat, nick=None):
+ def join(self, groupchat, nick=None, password=None):
   if nick == None: nick = self.get_nick(groupchat)
   else: self.set_nick(groupchat, nick)
   groupchat = groupchat.replace('\n', '')
   groupchat = self.bot.g.setdefault(groupchat, new_room(self.bot, groupchat))
   p = domish.Element(('jabber:client', 'presence'))
   p['to'] = u'%s/%s' % (groupchat.jid, nick)
-  p.addElement('status').addContent(options.get_option(groupchat.jid, 'status', \
+  p.addElement('status').addContent(options.get_option(groupchat.jid, 'status',
   config.STATUS).replace('%VERSION%', self.bot.version_version))
-  p.addElement('x', 'http://jabber.org/protocol/muc').addElement('history').__setitem__('maxchars', '0')
+  p.addElement('show').addContent(options.get_option(groupchat.jid, 'show', config.SHOW))
+  xElem = domish.Element(('http://jabber.org/protocol/muc', 'x'))
+  if password != None:
+   xElem.addElement('password').addContent(password)
+  p.addChild(xElem)
+  cElem = domish.Element(('http://jabber.org/protocol/caps', 'c'))
+  cElem['hash'] = 'sha-1'
+  cElem['ver'] = self.bot.caps
+  cElem['node'] = 'http://www.freq-bot.net/'
+  p.addChild(cElem)
   self.bot.wrapper.send(p)
   q = self.load_groupchats()
   if not (groupchat.jid in q): self.dump_groupchats(q+[groupchat.jid])

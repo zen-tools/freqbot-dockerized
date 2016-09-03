@@ -114,10 +114,13 @@ accepted_ranges = [
 (u'\u000D', u'\u000D'),
 (u'\u0020', u'\u007E'),
 (u'\u0085', u'\u0085'),
-(u'\u00A0', u'\uD7FF'),
-(u'\uE000', u'\uFDCF'),
-(u'\uFDE0', u'\uFFFD'),
-(u'\u10000', u'\u1FFFD'),
+(u'\u00A0', u'\u05FF'),
+(u'\u0800', u'\uD7FF'),
+(u'\uE000', u'\uFD49'),
+(u'\uFE00', u'\uFE69'),
+(u'\uFF00', u'\uFFFD'),
+(u'\u10000', u'\u10A69'),
+(u'\u10A80', u'\u1FFFD'),
 (u'\u20000', u'\u2FFFD'),
 (u'\u30000', u'\u3FFFD'),
 (u'\u40000', u'\u4FFFD'),
@@ -135,9 +138,6 @@ accepted_ranges = [
 (u'\u100000', u'\u10FFFD')
 ]
 
-# allow_symbol = (u'q',u'w',u'e',u'r',u't',u'y',u'u',u'i',u'o',u'p',u'a',u's',u'd',u'f',u'g',u'h',u'j',u'k',u'l',u'z',u'x',u'c',u'v',u'b',u'n',u'm',u'й',u'ц',u'у',u'к',u'е',u'н',u'г',u'ш',u'щ',u'з',u'х',u'ъ',u'ф',u'ы',u'в',u'а',u'п',u'р',u'о',u'л',u'д',u'ж',u'э',u'я',u'ч',u'с',u'м',u'и',u'т',u'ь',u'б',u'ю',u'ё',u'`',u'!',u'@',u'#',u'$',u'%',u'^',u'&',u'*',u'(',u')',u'-',u'=',u'[',u']',u'{',u'}',u':',u';',u'"',u'\'',u',',u'<',u'>',u'.',u'?',u'/',u'|',u'\\',u'№',u'~',u'_',u'+',u' ',u'1',u'2',u'3',u'4',u'5',u'6',u'7',u'8',u'9',u'0')
-allow_symbol = set((c for c in u'abcdefghijklmnopqrstuvwxyzабвгдеёжзийклмнопрстуфчхцшщъыьэюя1234567890-=!@#$%^&*()_+`~;:.,<>\'"\\|/ '))
-
 def clear_char(c):
  for rg in accepted_ranges:
   if (c >= rg[0]) and (c <= rg[1]): return c
@@ -147,34 +147,12 @@ def clear_text(s):
  res = map(clear_char, s)
  return u''.join(res)
 
-'''
-def html_del_deny(s):
- allow_out = ''
- for i in s:
-  if i.lower() in allow_symbol:
-   allow_out+=i
-  else:
-   allow_out+='?'
- return allow_out
-'''
- 
-def html_del_deny(s):
- return ''.join(c if c.lower() in allow_symbol else '' for c in s)
- #p = re.compile(r'<.*?>')
- #return p.sub('', s)
-
 bot.clear_text = clear_text
 
-
 strip_tags = re.compile(u'<[^<>]+>')
-body_regexp = re.compile(u'^.*<(body|BODY)[^>]*>(.*)<\/(body|BODY).*$', re.DOTALL)
 
 def html_decode(text):
  text = text.replace(u'\n', u'')
  text = text.replace('<p>', '\n').replace('<li>', '\n')
- text = re.compile(r'<script[^>]*>.*?</script>',re.S | re.U).sub(' ', text)
  return strip_tags.sub(u'', text.replace(u'<br>',u'\n')).replace(u'&nbsp;', u' ').replace(u'&lt;',\
  u'<').replace(u'&gt;', u'>').replace(u'&quot;', u'"').replace(u'\t', u'')
-
-def get_body(text):
- return body_regexp.match(text).groups()[1]

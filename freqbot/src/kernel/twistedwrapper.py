@@ -199,8 +199,9 @@ class ClientFactory(xmlstream.XmlStreamFactory):
 
 class wrapper:
 
- def __init__(self, version):
+ def __init__(self, version, caps):
   self.version = version
+  self.caps = caps
   self.stopped = False
   self.tc = 0
   self.th = {}
@@ -233,6 +234,11 @@ class wrapper:
   if not self.x: return
   if not status: status = config.STATUS.replace(r'%VERSION%', self.version)
   p = domish.Element(('jabber:client', 'presence'))
+  cElem = domish.Element(('http://jabber.org/protocol/caps', 'c'))
+  cElem['hash'] = 'sha-1'
+  cElem['ver'] = self.caps
+  cElem['node'] = 'http://www.freq-bot.net/'
+  p.addChild(cElem)
   p.addElement('status').addContent(status)
   p.addElement('show').addContent('chat')
   self.x.send(p)
@@ -258,7 +264,7 @@ class wrapper:
   self.msghandlers.append(func)
 
  def cbmessage(self, x):
-  delayed = [i for i in x.children if (i.__class__==domish.Element) and ((i.name=='delay') or ((i.name=='x') and (i.uri=='jabber:x:delay')))]
+  delayed = False
   try: body = self.getChild(x, 'body').children[0]
   except: body = ''
   try: subject = self.getChild(x, 'subject').children[0]

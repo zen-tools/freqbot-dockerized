@@ -19,6 +19,8 @@
 #~ along with FreQ-bot.  If not, see <http://www.gnu.org/licenses/>.    #
 #~#######################################################################
 def parse_alias(text):
+ if text == u'&': return (2, None, None, text, False)
+ if text == '': return (1, None, None, None, None)
  if text.startswith(u'access:'):
   q = re.match(u'^access:(\d{1,3}):(\d{1,3})@(.*[^&])(&?)$', text)
   if q:
@@ -36,6 +38,7 @@ class alias:
   self.glue = q[4]
   self.with_access = q[0]==0
   self.invalid = q[0]==1
+  self.security = u'access_' in command
   self.alias = q[3]
   self.a1 = q[1]
   self.a2 = q[2]

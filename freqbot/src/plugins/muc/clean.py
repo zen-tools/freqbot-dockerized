@@ -2,6 +2,7 @@
 # -*- coding: utf8 -*-
 #~#######################################################################
 #~ Copyright (c) 2008 Burdakov Daniel <kreved@kreved.org>               #
+#~ Copyright (c) 2011 Timur "TLemur" Timirkhanov                        #
 #~                                                                      #
 #~ This file is part of FreQ-bot.                                       #
 #~                                                                      #
@@ -19,9 +20,10 @@
 #~ along with FreQ-bot.  If not, see <http://www.gnu.org/licenses/>.    #
 #~#######################################################################
 def clean_handler(t, s, p):
- for i in range(18):
-  bot.muc.msg('groupchat', s.room.jid, '.')
+ r = int(p) if (p and p.isdigit()) else 18
+ for i in range(r):
+  bot.muc.msg('groupchat', s.room.jid, '')
   time.sleep(1.7)
- s.lmsg('groupchat', 'cleaned')
+ s.lmsg(t, 'cleaned')
 
 bot.register_cmd_handler(clean_handler, '.clean', 7, 1)

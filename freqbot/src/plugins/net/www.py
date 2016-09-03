@@ -23,6 +23,7 @@ from twisted.web.client import getPage
 from twisted.internet.error import DNSLookupError, TimeoutError
 from twisted.internet.defer import TimeoutError as DeferTimeout
 from twisted.web.error import Error as WebError
+from html2text import html2text
 
 www_regexp = re.compile(u'^(https?\:\/\/)?(((\w|\-)+\.)*\w+)(:\d+)?(\/(\w|[\-\._])+)*\/?$')
 
@@ -42,14 +43,10 @@ def www_handler(typ, source, params):
   d.addErrback(www_error, typ, source)
 
 def www_result(page, typ, source, enc):
- bot.html = page
- if len(page) > 100000: page = page[:100000]
  page = page.decode(enc, 'replace')
- try: page = get_body(page)
+ try: page = html2text(page)
  except: pass
- page = html_decode(page)
- page = '\n'.join([line.strip() for line in page.splitlines() if line.strip()])
- page = html_del_deny(page)
+ if len(page) > 100000: page = page[:100000]
  source.msg(typ, page)
 
 def www_error(reason, typ, source):
@@ -58,5 +55,4 @@ def www_error(reason, typ, source):
  elif reason.check(WebError): source.lmsg(typ, 'www_error')
  else: source.lmsg(typ, 'www_error_reason', repr(reason))
 
-# fixed critical bugs, you can use the command
 bot.register_cmd_handler(www_handler, '.www')

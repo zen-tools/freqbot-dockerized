@@ -20,17 +20,20 @@
 #~ along with FreQ-bot.  If not, see <http://www.gnu.org/licenses/>.    #
 #~#######################################################################
 
-import urllib2
+import urllib
 import simplejson
 
 def google_handler(typ, source, params):
  params = params.strip()
  if not params: source.lmsg(typ,'google?'); return
- url = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=%s' % params.encode('utf-8')
- try: page = urllib2.urlopen(url)
+ query = urllib.urlencode({'q': params.encode('utf-8')})
+ url = 'http://ajax.googleapis.com/ajax/services/search/web?v=1.0&%s' % (query)
+ try: page = urllib.urlopen(url)
  except: source.lmsg(typ,'google_no_results'); return
  fp = simplejson.load(page)
- if fp['responseStatus']==200: source.msg(typ,'%s:\n%s\n%s' % (html_decode(fp['responseData']['results'][0]['title']),html_decode(fp['responseData']['results'][0]['content']),html_decode(fp['responseData']['results'][0]['url'])))
+ if fp['responseStatus']==200:
+  if not fp['responseData']['results']: source.lmsg(typ,'google_no_results'); return
+  source.msg(typ,'%s:\n%s\n%s' % (html_decode(fp['responseData']['results'][0]['title']),html_decode(fp['responseData']['results'][0]['content']),fp['responseData']['results'][0]['unescapedUrl']))
  else: source.lmsg(typ,'google_no_results')
  
 

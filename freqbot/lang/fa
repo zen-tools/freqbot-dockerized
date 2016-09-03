@@ -1,29 +1,33 @@
-affiliation_editor_disabled I'm owner of this room. This command is disabled for security purposes.
+ERROR During processing your message, an exception has been catched. If you're admin, read %s for more information.
+The languange message saved
+access_added dastrasi zakhire shod
+added added
+affiliation_editor_disabled man owner e in otaghe goftogu hastam.in farman baraye ahdafe amniaty gheyre fa'al mibashad.
 alias_cleared cleared
 alias_deleted deleted
 alias_empty alias list is empty
 alias_no_access not allowed
 alias_not_allowed not allowed
 alias_not_found alias not found
-alias_security possible security hole in alias
 alias_saved saved
 alias_saved_with_access alias saved (required level: %s, alias grants: %s)
-censor censor from %s\nnick: %s(%s)\ncensor: %s\n%s 
-chatlog_banned_reason %s was banned: %s
+censor censor from %s\nnick: %s(%s)\ncensor: %s\n%s
 chatlog_banned %s was banned
-chatlog_changed_nick changes nick to %s
+chatlog_banned_reason %s was banned: %s
 chatlog_change_subject %s has set the subject: %s
+chatlog_changed_nick changes nick to %s
 chatlog_joined joins the room
-chatlog_kicked_reason %s was kicked: %s
 chatlog_kicked %s was kicked
+chatlog_kicked_reason %s was kicked: %s
 chatlog_leaved leaves the room
 chatlog_leaved_reason leaves the room: %s
 chatlog_subject Subject: %s
 cleaned cleaned
-current_lang Current language is English (en)
+current_lang Zabane konuni Farsi ast (fa)
+deleted deleted
 disco_empty disco list is empty
 disco_error can't query
-ERROR During processing your message, an exception has been catched. If you're admin, read %s for more information.
+e_remote-server-not-found %s was not responded
 from_me me
 from_you you
 get_msglimit %s
@@ -44,20 +48,23 @@ idle_error can't query
 idle_result %s`s idle is %s
 info %s %s's uptime is %s\nload average: %s stanza/sec, stanza length %s
 invalid_error_stanza can't understand server response: %s
-invalid_syntax_default Invalid syntax
+invalid_nick_or_jid invalid jid or nick
 invalid_syntax Syntax:\n%s
-join_already_there I'm already in that room... if not, you should to ask my admin to give me command ".rejoin"
-joined Joined '%s'
+invalid_syntax_default Invalid syntax
+join_already_there man darhale hazer darin otaghe goftogo hozur daram. Agar na be yeki az modiran man moraje konid baraye sodure dasture  ".rejoin"
 join_failed can't join to %s (with nick %s)
+join_not_permitted man mojaz be vorod nistam. %s be vasileye yeki az modirane bot.
 join_slash invalid room or nick: "/" is not allowed
-join_success joined to %s with nick %s
-lang_changed Language successfully changed
-lang_list Available languages: %s
-lang_msg_saved saved
-lang_not_found Language '%s' not found. Use .lang_list to see list of available languages.
-lang_other_languages unfortunabelly help for '%s' not implemented yet in language '%s'; use %s instead
-lang_self English (en)
-leaved Leaved '%s'
+join_success vared shodam be %s ba name mostaare %s
+joined Joined '%s'
+lang_changed zaban ba movafaghiat avaz shod
+lang_list Zabanhaye mojod: %s
+lang_msg_saved zakhire shod
+lang_not_found zabane '%s' mojud nist. Az dasture .lang_list estefade konid baraye didane zabanhaye mojod
+lang_other_languages Moteasefane rahnama baraye '%s' mojod nist dar zabane '%s'; az %s estefade konid
+lang_self Farsi (fa)
+leaved  Kharej shodam az '%s'
+left expire after
 log.header <html><head><title>freq log</title></head><body>\n
 log.record <p><i><font color="#999999">[%d.%m.%y %H:%M:%S]</font></i> %%s</p>\n
 moderate_error can't
@@ -66,57 +73,40 @@ moderate_ok ok
 msglimit_saved saved
 muc_only this command available only in conference
 muc_whois %s/%s\n%s(%s)\njoined %s\naccess level: %s
-nick_updated ok
-nick_update ok
-noisy_already_off "noisy" mode is not enabled
-noisy_already_on "noisy" mode already turned on
-noisy_ban %s banned... %s
-noisy_join %s: hello
-noisy_kick bustards! the killed %s?? %s?
-noisy_leave %s: you leave? :( (%s)
-noisy_rename %s: change nick??
+nick_update update
+nick_updated Berooz rasani shod
+noisy_already_off karbord , gheyre fa'al shod
+noisy_already_on karbord , Amade va darhale kar ast
+noisy_ban wew %s Ban shod... :-O \n%s
+noisy_join %s: salam khosh amadi :-*
+noisy_kick che ghamangiz %s kick shod :'-( \n%s
+noisy_leave /me eyvay %s Rafti *WALL*\n%s
+noisy_rename %s: nick eto avaz kardi??
 not_allowed Not allowed.
-ok O'key
+ok eta'at
 ping_error can`t ping
-pong pong from %s %s
+pong zamane pasokh baraye  %s %s
 pyexec.ok Successful!
+restarting be zoodi baz khaham gasht...
 rewrite_cycle ERROR: recursion level more than %s
 rewrite_too_many_commands Too many commands! need to be <%s
+saved zakhire shod
 see_private see private
 stats_error unknown
 stats_result Stats for %s\nTotal: %s users\nOnline: %s users
-status_updated ok
 status_update ok
+status_updated ok
 status_whom who?
-test.passed passed
+stoping farmane khamushi.lotfan chan lahze sabr konid...
+stopping farmane khamushi.lotfan chan lahze sabr konid...
+test.passed Oboor *THUMBS UP*
 time_error unknown
 uptime_error can't query
 uptime_result %s's uptime is %s
 vcard_error failed to fetch vcard
 version_error failed
 version_result_jid on %s %s %s %s
-version_result_nick %s use %s %s %s
-version_result_self %s %s %s
-version_result_your you use %s %s %s
+version_result_nick %s estefade mikonad az %s %s %s
+version_result_self Khodam ra moarefi mikonam:  %s %s ba OS e, %s
+version_result_your To estefade mikoni az %s %s %s
 whom? who?
-update_info my revision: %s available revision: %s
-wtf_error error in wtf plugin
-wtf_empty What to look?
-wtf_not_found Has found nothing
-dfn_empty What to write?
-dfn_save Has saved
-dfn_remove Has deleted
-dfn_failed Has not found in a database
-wtf_result I know that %s:\n%s
-wtfnames_result In database of this conference I see
-wtfnames_result I see this:\n %s (in total %s)
-wtfnames_empty The database is empty
-wtfsearch_result Coincidences are found in: %s
-wtfsearch_error not found
-wtfsearch_not_parameters what to search?
-member member
-participant participant
-admin admin
-moderator moderator
-owner owner
-visitor visitor

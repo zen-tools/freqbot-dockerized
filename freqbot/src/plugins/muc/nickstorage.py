@@ -64,7 +64,9 @@ class nickstorage:
     nick = item.nick + str(n)
    self.db.query('insert into users values (?, ?, ?, ?, ?, ?, ?)',\
    (room, jid, nick, ftime, ltime, ltype, lreason))
-   self.db.commit()
+  else:
+   self.db.query('update users set nick=? where room=? and jid=?', (nick, room, jid))
+  self.db.commit()
  
  def _onLeave(self, item, typ, reason):
   room = item.room.jid

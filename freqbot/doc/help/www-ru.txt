@@ -1,0 +1,6 @@
+net
+получение www-страницы
+Синтаксис: .www url [кодировка]
+например:
+ .www http://google.ru/
+ .www http://yandex.ru/ koi8-r

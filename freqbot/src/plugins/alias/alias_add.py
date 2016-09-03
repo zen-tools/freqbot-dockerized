@@ -30,6 +30,7 @@ def alias_add_handler(t, s, p):
    else:
     n = alias(a, command)
     if n.invalid: s.syntax(t, 'alias_add')
+    elif n.security: s.lmsg(t, 'alias_security')
     else:
      if not n.with_access:
       alias_set(s.room.jid, n)

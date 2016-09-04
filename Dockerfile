@@ -13,6 +13,7 @@ ENV LC_ALL C.UTF-8
 
 RUN mkdir /chatlogs
 RUN mkdir /var/log/freqbot/
+RUN chmod 777 /var/log/freqbot
 
 ADD freqbot /opt/freqbot
 RUN find /opt/freqbot -name '*.pyc' -delete

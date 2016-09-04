@@ -4,7 +4,7 @@ NICK="SysLog";
 ACCOUNT="syslog@jabber.ua";
 PASSWD="******";
 ADMINS="your-jid@jabber.ua, more-jid@jabber.ua";
-VOLUME="/home/zen/Desktop/jbot/data";
+VOLUME="$HOME/jabber-bot/data";
 UGUID=$(stat -c "%u:%g" "$VOLUME");
 
 test -n "$(which docker 2> /dev/null)" || {
@@ -12,7 +12,7 @@ test -n "$(which docker 2> /dev/null)" || {
     exit 1;
 }
 
-echo "Updating nightwolf/freqbot container...";
+echo "Updating nightwolf/freqbot image...";
 docker pull nightwolf/freqbot;
 
 echo "Restarting jabber-bot...";
@@ -26,7 +26,7 @@ ID=$(
         -e PASSWD="$PASSWD" \
         -e ADMINS="$ADMINS" \
         -v "$VOLUME":/data \
-        -u $UGUID \
+        -u "$UGUID" \
         nightwolf/freqbot
 );
 echo "Container ID: $ID";

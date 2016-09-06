@@ -11,7 +11,7 @@ ENV LANG C.UTF-8
 ENV LANGUAGE C.UTF-8
 ENV LC_ALL C.UTF-8
 
-RUN mkdir /chatlogs
+RUN mkdir /data
 RUN mkdir /var/log/freqbot/
 RUN chmod 777 /var/log/freqbot
 

@@ -24,7 +24,7 @@
 import random
 import itertools
 
-TOTAL_IDS_CNT = 22
+TOTAL_IDS_CNT = 19
 SHUFFLED_PHR_IDS = None
 SHUFFLED_PHR_CNT = 0
 

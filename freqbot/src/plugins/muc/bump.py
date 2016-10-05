@@ -42,7 +42,7 @@ def get_jid(source, p):
 def get_next_phrase_id():
     global SHUFFLED_PHR_IDS, SHUFFLED_PHR_CNT, SHUFFLED_PHR_TTL
 
-    if SHUFFLED_PHR_CNT % (TOTAL_IDS_CNT * 2) == 0:
+    if SHUFFLED_PHR_CNT % TOTAL_IDS_CNT == 0:
         SHUFFLED_PHR_IDS = None
 
     if SHUFFLED_PHR_IDS is None:

@@ -1,23 +1,24 @@
 #!/usr/bin/env python
 # -*- coding: utf8 -*-
-#~#######################################################################
-#~ Copyright (c) 2008 Burdakov Daniel <kreved@kreved.org>               #
-#~                                                                      #
-#~ This file is part of FreQ-bot.                                       #
-#~                                                                      #
-#~ FreQ-bot is free software: you can redistribute it and/or modify     #
-#~ it under the terms of the GNU General Public License as published by #
-#~ the Free Software Foundation, either version 3 of the License, or    #
-#~ (at your option) any later version.                                  #
-#~                                                                      #
-#~ FreQ-bot is distributed in the hope that it will be useful,          #
-#~ but WITHOUT ANY WARRANTY; without even the implied warranty of       #
-#~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        #
-#~ GNU General Public License for more details.                         #
-#~                                                                      #
-#~ You should have received a copy of the GNU General Public License    #
-#~ along with FreQ-bot.  If not, see <http://www.gnu.org/licenses/>.    #
-#~#######################################################################
+# __NEED_DB__
+########################################################################
+# Copyright (c) 2008 Burdakov Daniel <kreved@kreved.org>               #
+#                                                                      #
+# This file is part of FreQ-bot.                                       #
+#                                                                      #
+# FreQ-bot is free software: you can redistribute it and/or modify     #
+# it under the terms of the GNU General Public License as published by #
+# the Free Software Foundation, either version 3 of the License, or    #
+# (at your option) any later version.                                  #
+#                                                                      #
+# FreQ-bot is distributed in the hope that it will be useful,          #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of       #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        #
+# GNU General Public License for more details.                         #
+#                                                                      #
+# You should have received a copy of the GNU General Public License    #
+# along with FreQ-bot.  If not, see <http://www.gnu.org/licenses/>.    #
+########################################################################
 
 # here we use some parts of Neutron code http://svn.hypothetic.org/neutron/trunk/plugins/log_plugin.py
 # html/css design copied from ejabberd chatlogs
@@ -33,8 +34,8 @@ def read_file(f):
 
 LOG_FILES = {}
 TOPICS = {}
-log_header = read_file('templates/chatlog_header.html')
-log_footer = read_file('templates/chatlog_footer.html')
+log_header = '<div class="logdate">$day.$month.$year</div>'
+log_footer = ''
 
 def check_dir(s):
  if not os.access(s, os.F_OK): os.mkdir(s)
@@ -183,4 +184,3 @@ bot.register_leave_handler(chatlogs_leave_handler)
 # We should have write access to config.CHATLOGS_DIR
 if os.access(config.CHATLOGS_DIR, os.W_OK) == 0:
  os.mkdir(config.CHATLOGS_DIR)
-

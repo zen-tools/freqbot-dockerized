@@ -54,11 +54,11 @@ ENABLE_SQLITE = True
 
 ### DEBUG LOGGING ###
 LOGLEVEL = 5
-LOGFILE = '/var/log/freqbot/log.html'
-LOGF = '/var/log/freqbot/twisted.log'
-ERRLOGFILE = '/var/log/freqbot/err.html'
+LOGFILE = '/data/logs/log.html'
+LOGF = '/data/logs/twisted.log'
+ERRLOGFILE = '/data/logs/err.html'
 RAWXML = None
-#RAWXML = '/var/log/freqbot/raw.xml'
+# RAWXML = '/data/logs/raw.xml'
 
 ### PLUGINS ###
 PLUGINS_DIR = 'src/plugins'
@@ -70,6 +70,5 @@ CHATLOGS_DIR = '/data/chatlogs'
 CHATLOGS_ENABLE = 'on'
 CHATLOGS_ALLOW_SWICH = True
 CHATLOGS_IN_MAIN_THREAD = True
-CHATLOGS_ALLOW_PASSWD = True
 MSGBOX_SIZE = 10
 MSG_TIME_TO_LIVE = 604800

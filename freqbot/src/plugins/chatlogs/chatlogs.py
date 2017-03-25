@@ -20,22 +20,39 @@
 # along with FreQ-bot.  If not, see <http://www.gnu.org/licenses/>.    #
 ########################################################################
 
-# here we use some parts of Neutron code http://svn.hypothetic.org/neutron/trunk/plugins/log_plugin.py
-# html/css design copied from ejabberd chatlogs
-
 from twisted.web.html import escape
 from twisted.words.protocols.jabber import jid
+
+from cerberus import censor
+
+
+wBad = censor().values
+wGood = censor().good
+LOG_FILES = {}
+TOPICS = {}
+log_header = '<div class="logdate">$day.$month.$year</div>'
+log_footer = ''
+
+def censor_msg(msg):
+ for i in range(0, len(wBad)):
+  bad_words = [match.group().strip() for match in re.finditer(wBad[i], msg)]
+  for bad_word in set(bad_words):
+   is_good = False
+   for i in range(0, len(wGood)):
+    r = wGood[i].match(bad_word)
+    if r:
+     is_good = True
+     break
+   if not is_good:
+    p = re.compile(u"\\b%s\\b" % bad_word, re.IGNORECASE | re.UNICODE)
+    msg = re.sub(p, '[s]%s[/s]' % bad_word, msg)
+ return msg
 
 def read_file(f):
  q = open(f, 'r')
  s = q.read().decode('utf8', 'replace')
  q.close()
  return s
-
-LOG_FILES = {}
-TOPICS = {}
-log_header = '<div class="logdate">$day.$month.$year</div>'
-log_footer = ''
 
 def check_dir(s):
  if not os.access(s, os.F_OK): os.mkdir(s)
@@ -46,6 +63,7 @@ def write_to_log(groupchat, text, with_timestamp=True, with_br=True):
  else: write_to_log_(groupchat, text, with_timestamp, with_br)
 
 def write_to_log_(groupchat, text, with_timestamp=True, with_br=True):
+ text = censor_msg(text)
  p1 = '%s/%s' % (config.CHATLOGS_DIR, groupchat.encode('utf8', 'replace'))
  p2 = '%s/%s' % (p1, time.strftime('%Y'))
  p3 = '%s/%s' % (p2, time.strftime('%m'))

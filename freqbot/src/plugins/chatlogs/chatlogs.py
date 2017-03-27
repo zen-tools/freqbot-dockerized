@@ -63,7 +63,6 @@ def write_to_log(groupchat, text, with_timestamp=True, with_br=True):
  else: write_to_log_(groupchat, text, with_timestamp, with_br)
 
 def write_to_log_(groupchat, text, with_timestamp=True, with_br=True):
- text = censor_msg(text)
  p1 = '%s/%s' % (config.CHATLOGS_DIR, groupchat.encode('utf8', 'replace'))
  p2 = '%s/%s' % (p1, time.strftime('%Y'))
  p3 = '%s/%s' % (p2, time.strftime('%m'))
@@ -116,11 +115,14 @@ def chatlogs_msg_handler(source, body):
  room = j.userhost()
  nick = j.resource
  if not nick: nick = room
+ nick = censor_msg(escape(nick).replace('\n', '<br/>'))
  if (room in bot.g.keys()) and (bot.g[room].get_option('chatlogs', config.CHATLOGS_ENABLE)=='on'):
   if body.startswith(u'/me ') and (len(body)>4):
-   m = u'<font class="mne">* %s %s</font>' % (escape(nick), replace_links(escape(body[4:]).replace('\n', '<br/>')))
+   body = censor_msg(replace_links(escape(body[4:]).replace('\n', '<br/>')))
+   m = u'<font class="mne">* %s %s</font>' % (nick, body)
   else:
-   m = u'<font class="mn">&lt;%s&gt;</font> %s' % (escape(nick), replace_links(escape(body).replace('\n', '<br/>')))
+   body = censor_msg(replace_links(escape(body).replace('\n', '<br/>')))
+   m = u'<font class="mn">&lt;%s&gt;</font> %s' % (nick, body)
   write_to_log(room, m)
 
 def chatlogs_topic_handler(source, subject, immediately=False):
@@ -132,15 +134,17 @@ def chatlogs_topic_handler(source, subject, immediately=False):
  TOPICS[room] = subject
  nick = j.resource
  #print [nick]
+ room_subject = censor_msg(replace_links(escape(subject).replace('\n', '<br/>')))
  if (bot.g[room].get_option('chatlogs', config.CHATLOGS_ENABLE)=='on'):
   if nick:
+   nick = censor_msg(escape(nick))
    #print [nick]
-   m = lang.msg('chatlog_change_subject', (escape(nick), replace_links(escape(subject).replace('\n', '<br/>'))), lang.getLang(source))
+   m = lang.msg('chatlog_change_subject', (nick, room_subject), lang.getLang(source))
    #print [m]
    m = u'<font class="roomcsubject">' + m + u'</font>\n'
    #print [m]
   else:
-   m = lang.msg('chatlog_subject', (replace_links(escape(subject).replace('\n', '<br/>')), ), lang.getLang(source))
+   m = lang.msg('chatlog_subject', (room_subject, ), lang.getLang(source))
    m = u'<div class="roomsubject">' + m + u'</div>\n'
   #print 'let\'s write_to_log'
   #print (room, m, nick <> None)
@@ -150,7 +154,8 @@ def chatlogs_topic_handler(source, subject, immediately=False):
 
 def chatlogs_join_handler(item):
  if item.room and (item.room.get_option('chatlogs', config.CHATLOGS_ENABLE)=='on'):
-  m = u'<font class="mj">%s %s</font>' % (escape(item.nick), lang.get('chatlog_joined', lang.getLang(item.jid)))
+  nick = censor_msg(escape(item.nick))
+  m = u'<font class="mj">%s %s</font>' % (nick, lang.get('chatlog_joined', lang.getLang(item.jid)))
   write_to_log(item.room.jid, m)
 
 def chatlogs_leave_handler(item, typ, reason):
@@ -169,10 +174,11 @@ def chatlogs_leave_handler(item, typ, reason):
    if reason: m = lang.msg('chatlog_banned_reason', (escape(reason), ), lang.getLang(item.jid))
    else: m = lang.get('chatlog_banned', lang.getLang(item.jid))
   elif typ == 3:
-   m = lang.msg('chatlog_changed_nick', (escape(item.nick), ), lang.getLang(item.jid))
-  if typ == 3: nick = reason
-  else: nick = item.nick
-  m = u'<font class="ml">%s %s</font>' % (escape(nick), m)
+   nick = censor_msg(escape(item.nick))
+   m = lang.msg('chatlog_changed_nick', (nick, ), lang.getLang(item.jid))
+  if typ == 3: nick = escape(reason)
+  else: nick = censor_msg(escape(item.nick))
+  m = u'<font class="ml">%s %s</font>' % (nick, m)
   write_to_log(item.room.jid, m)
 
 if config.CHATLOGS_ALLOW_SWICH: log_access = 11

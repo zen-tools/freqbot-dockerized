@@ -34,6 +34,7 @@ log_header = '<div class="logdate">$day.$month.$year</div>'
 log_footer = ''
 
 def censor_msg(msg):
+ return msg
  for i in range(0, len(wBad)):
   bad_words = [match.group().strip() for match in re.finditer(wBad[i], msg)]
   for bad_word in set(bad_words):

@@ -1,6 +1,6 @@
 FROM debian:jessie
 
-MAINTAINER Dmitriy Poltavchenko <admin@linuxhub.ru>
+MAINTAINER Dmitriy Poltavchenko <poltavchenko.dmitriy@gmail.com>
 
 ENV DEBIAN_FRONTEND noninteractive
 
